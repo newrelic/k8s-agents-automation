@@ -190,7 +190,7 @@ jobs:
       - name: Checkout version-update.go app
         uses: actions/checkout@v4
         with:
-          repository: newrelic/k8s-metadata-injection
+          repository: newrelic/k8s-agents-automation
           path: tools
           ref: main
           sparse-checkout: |
