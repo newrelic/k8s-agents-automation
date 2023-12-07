@@ -2,7 +2,7 @@ name: Reusable Trigger Prerelease Creation
 
 # This workflow triggers a prerelease creation with changelog and the release notes created by the release toolkit.
 # This workflow should be triggered merely from the default branch.
-# For more details about how to release follow https://github.com/newrelic/coreint-automation/blob/main/docs/release_runbook.md
+# For more details about how to release follow https://github.com/newrelic/k8s-agents-automation/blob/main/docs/release_runbook.md
 
 on:
   workflow_call:
@@ -32,7 +32,7 @@ env:
 
 jobs:
   prerelease:
-    uses: newrelic/coreint-automation/.github/workflows/trigger_prerelease.yaml@v1
+    uses: newrelic/k8s-agents-automation/.github/workflows/trigger_prerelease.yaml@v1
     with:
       rt-included-files: go.mod,go.sum,Dockerfile
       bot_email: ${{ inputs.bot_email }}
