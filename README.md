@@ -22,7 +22,7 @@ Reusable workflow to pre-release. This is used by ohai repos trigger_prerelease 
   ```
   jobs:
     your_prerelease_job_name:
-      uses: newrelic/coreint-automation/.github/workflows/trigger_prerelease.yaml@v1
+      uses: newrelic/k8s-agents-automation/.github/workflows/trigger_prerelease.yaml@v1
       secrets:
         bot_token: 'github token'
         slack_channel: 'slack channel for sending a message in case of failure'
@@ -44,7 +44,7 @@ The block mechanism can be manually set by manually executing the workflow [Bloc
 ```json5
 {
   "extends": [
-    "github>newrelic/coreint-automation:renovate-base.json5"
+    "github>newrelic/k8s-agents-automation:renovate-base.json5"
   ]
 }
 ```
@@ -53,7 +53,7 @@ Or include additional rules if needed:
 
 ```json5
  "extends": [
-   "github>newrelic/coreint-automation:renovate-base.json5"
+   "github>newrelic/k8s-agents-automation:renovate-base.json5"
   ],
   "packageRules": [
     // ...

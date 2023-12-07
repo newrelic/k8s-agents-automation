@@ -1,7 +1,7 @@
 # Release
 The goal of this document is to describe the release process on repos that implements the [trigger_prerelease](../.github/workflows/trigger_prerelease.yaml) workflow.
 
-A list of repos using this workflow can be inspected [here](https://github.com/newrelic/coreint-automation/network/dependents).
+A list of repos using this workflow can be inspected [here](https://github.com/newrelic/k8s-agents-automation/network/dependents).
 
 ## Pre-Releases
 
