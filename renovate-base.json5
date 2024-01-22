@@ -18,6 +18,8 @@
   // Update source import paths on major module updates, using mod.
   // Since postUpdateOptions is mergeable, all previous and future values are kept
   "postUpdateOptions": ["gomodUpdateImportPaths"],
+  // Ignore deprecated library that cannot be upgraded
+  ignoreDeps: ["ingress-nginx/kube-webhook-certgen"],
   // The rules defined here will be used in all core-int repositories, so they should be valid
   // for all of them.
   "packageRules": [
@@ -65,6 +67,24 @@
         // check <https://docs.renovatebot.com/configuration-options/#groupname> for details about grouping.
         "matchPackageNames": ["golang", "go"],
         "groupName": "golang version"
-    }
-  ]
+    },
+    {
+      "groupName": "Minikube version (batch update)",
+      "matchDepNames": ["manusa/actions-setup-minikube", "kubernetes/minikube"],
+    },
+  ],
+  "customManagers": [
+    {
+      "description": "Update minikube",
+      "customType": "regex",
+      "fileMatch": [
+        "^\.github/workflows/.+\.ya?ml$",
+      ],
+      "matchStrings": [
+        "\\s+minikube version:\\s+(?<currentValue>v.*?)\\s+",
+      ],
+      "depNameTemplate": "kubernetes/minikube",
+      "datasourceTemplate": "github-releases",
+    },
+  ],
 }
