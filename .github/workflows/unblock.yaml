@@ -2,6 +2,7 @@ name: Unblock automatic releases
 
 on:
   workflow_dispatch:
+  pull_request:
 
 env:
   UNBLOCK_FILE_NAME: automatic_release_enable
