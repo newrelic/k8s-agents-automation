@@ -30,8 +30,13 @@
     {
       // We always merge patch updates.
       "matchUpdateTypes": ["patch"],
-      // Exclude packages known for breaking changes even in minor and patch upgrades.
-      "excludePackagePatterns": ["sarama"],
+      "excludePackagePatterns": [
+        // Exclude Terraform module EKS: it creates new versions per pull
+        // request and it does a poor job for checking releases before publishing
+        "terraform-aws-modules/eks/aws",
+        // Exclude packages known for breaking changes even in minor and patch upgrades.
+        "sarama",
+      ],
       // Exclude any dependencies which are pre-1.0.0 because those can make breaking changes at any time
       // according to the SemVer spec.
       "matchCurrentVersion": "!/^(0|v0)/",
@@ -43,8 +48,13 @@
     {
       // Minor versions are also auto-merged except for golang
       "matchUpdateTypes": ["minor"],
-      // Exclude packages known for breaking changes even in minor and patch upgrades.
-      "excludePackagePatterns": ["sarama"],
+      "excludePackagePatterns": [
+        // Exclude Terraform module EKS: it creates new versions per pull
+        // request and it does a poor job for checking releases before publishing
+        "terraform-aws-modules/eks/aws",
+        // Exclude packages known for breaking changes even in minor and patch upgrades.
+        "sarama",
+      ],
       // Exclude any dependencies which are pre-1.0.0 because those can make breaking changes at any time
       // according to the SemVer spec.
       "matchCurrentVersion": "!/^(0|v0)/",
