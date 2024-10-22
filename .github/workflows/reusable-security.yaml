@@ -49,7 +49,7 @@ jobs:
           docker buildx build --load --platform=linux/amd64 --tag trivy-scan:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner sarif output
-        uses: aquasecurity/trivy-action@0.18.0
+        uses: aquasecurity/trivy-action@0.28.0
         # Upload sarif when running periodically or pushing to main
         if: ${{ github.event.schedule || (github.event_name == 'push' && github.ref_name == 'main') }}
         with:
