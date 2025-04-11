@@ -28,7 +28,7 @@ jobs:
           go-version-file: './go.mod'
 
       - name: Run Trivy vulnerability scanner in repo mode
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@0.30.0
         if: ${{ ! github.event.schedule }} # Do not run inline checks when running periodically
         with:
           scan-type: fs
@@ -49,7 +49,7 @@ jobs:
           docker buildx build --load --platform=linux/amd64 --tag trivy-scan:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner sarif output
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@0.30.0
         # Upload sarif when running periodically or pushing to main
         if: ${{ github.event.schedule || (github.event_name == 'push' && github.ref_name == 'main') }}
         with:
