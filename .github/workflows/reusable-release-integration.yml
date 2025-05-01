@@ -332,9 +332,9 @@ jobs:
           DOCKER_IMAGE_NAME: ${{ inputs.docker_image_name }}
           DOCKER_IMAGE_TAG: ${{ needs.build-env-args.outputs.docker_image_tag }}
         run: |
-          chmod +x ./windows/util/create-manifest.sh
-          ./windows/util/create-manifest.sh --docker-image-name ${DOCKER_IMAGE_NAME} --docker-image-tag ${DOCKER_IMAGE_TAG} --is-prerelease "${{ github.event.release.prerelease }}"
-  
+          chmod +x ./src/utils/create-combined-manifest.sh
+          ./src/utils/create-combined-manifest.sh --docker-image-name ${DOCKER_IMAGE_NAME} --docker-image-tag ${DOCKER_IMAGE_TAG} --is-prerelease "${{ github.event.release.prerelease }}"
+
   open-pr:
     name: Update version and appVersion and open pr
     needs: [ docker-integration ]
