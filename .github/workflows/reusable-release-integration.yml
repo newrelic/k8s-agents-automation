@@ -187,11 +187,10 @@ jobs:
       fail-fast: true
       matrix:
         windows:
-          # Tag must exist in both https://hub.docker.com/_/microsoft-windows-servercore and
-          # https://hub.docker.com/_/microsoft-windows-nanoserver, and must be matched with the runner.
-          - runner: windows-2019
+          # we're using a large VM runner with Hyper-V support
+          - runner: windows-x64-8-core
             tag: ltsc2019
-          - runner: windows-2022
+          - runner: windows-x64-8-core
             tag: ltsc2022
     runs-on: ${{ matrix.windows.runner }}
     steps:
@@ -228,9 +227,9 @@ jobs:
       fail-fast: true
       matrix:
         windows:
-          - runner: windows-2019
+          - runner: windows-x64-8-core
             tag: ltsc2019
-          - runner: windows-2022
+          - runner: windows-x64-8-core
             tag: ltsc2022
     runs-on: ${{ matrix.windows.runner }}
     steps:
