@@ -312,7 +312,17 @@ jobs:
       DOCKER_IMAGE_TAG: ${{ needs.build-env-args.outputs.docker_image_tag }}
       REGCTL_VERSION: v0.8.3
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout create-combined-manifest shell script
+        uses: actions/checkout@v4
+        with:
+          repository: newrelic/k8s-agents-automation
+          path: tools
+          ref: main
+          sparse-checkout: |
+            create-combined-manifest.sh
+          sparse-checkout-cone-mode: false
+      - name: List files
+        run: ls -la
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
@@ -331,15 +341,22 @@ jobs:
           DOCKER_IMAGE_NAME: ${{ inputs.docker_image_name }}
           DOCKER_IMAGE_TAG: ${{ needs.build-env-args.outputs.docker_image_tag }}
         run: |
-          chmod +x ./src/utils/create-combined-manifest.sh
-          ./src/utils/create-combined-manifest.sh --docker-image-name ${DOCKER_IMAGE_NAME} --docker-image-tag ${DOCKER_IMAGE_TAG} --is-prerelease "${{ github.event.release.prerelease }}"
+          chmod +x ./tools/src/utils/create-combined-manifest.sh
+          ./tools/src/utils/create-combined-manifest.sh --docker-image-name ${DOCKER_IMAGE_NAME} --docker-image-tag ${DOCKER_IMAGE_TAG} --is-prerelease "${{ github.event.release.prerelease }}"
 
   open-pr:
     name: Update version and appVersion and open pr
-    needs: [ docker-integration ]
-    runs-on: ubuntu-latest
     # run only for releases (not prereleases)
-    if: ${{ ! github.event.release.prerelease && inputs.enable_helm_chart_release }}
+    if: >-
+      ${{
+        always() &&
+        (! github.event.release.prerelease && inputs.enable_helm_chart_release) &&
+        needs.docker-integration.result == 'success' &&
+        ( needs.docker-integration-windows.result == 'success' || needs.docker-integration-windows.result == 'skipped' ) &&
+        ( needs.create-multi-platform-arch-manifest.result == 'success' || needs.create-multi-platform-arch-manifest.result == 'skipped' )
+      }}
+    needs: [ docker-integration, docker-integration-windows, create-multi-platform-arch-manifest ]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout original repo
         uses: actions/checkout@v4
