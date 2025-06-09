@@ -346,6 +346,8 @@ jobs:
 
   open-pr:
     name: Update version and appVersion and open pr
+    runs-on: ubuntu-latest
+    needs: [ docker-integration, docker-integration-windows, create-multi-platform-arch-manifest ]
     # run only for releases (not prereleases)
     if: >-
       ${{
@@ -355,8 +357,6 @@ jobs:
         ( needs.docker-integration-windows.result == 'success' || needs.docker-integration-windows.result == 'skipped' ) &&
         ( needs.create-multi-platform-arch-manifest.result == 'success' || needs.create-multi-platform-arch-manifest.result == 'skipped' )
       }}
-    needs: [ docker-integration, docker-integration-windows, create-multi-platform-arch-manifest ]
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout original repo
         uses: actions/checkout@v4
