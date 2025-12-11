@@ -1,3 +1,3 @@
 module github.com/newrelic/k8s-agents-automation
 
-go 1.25.3
+go 1.25.5
