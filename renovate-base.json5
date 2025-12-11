@@ -18,8 +18,6 @@
   // Update source import paths on major module updates, using mod.
   // Since postUpdateOptions is mergeable, all previous and future values are kept
   "postUpdateOptions": ["gomodUpdateImportPaths"],
-  // Ignore deprecated library that cannot be upgraded
-  ignoreDeps: ["ingress-nginx/kube-webhook-certgen"],
   // The rules defined here will be used in all core-int repositories, so they should be valid
   // for all of them.
   "packageRules": [
