@@ -105,5 +105,15 @@
       ],
       "datasourceTemplate": "docker",
     },
+    {
+      "description": "Update Helm versions for CI",
+      "customType": "regex",
+      "fileMatch": ["^\\.github/workflows/.+\\.ya?ml$"],
+      "matchStrings": [
+        "uses: azure/setup-helm@v4\\s+with:\\s+version: '(?<currentValue>.*)'"
+      ],
+      "depNameTemplate": "helm/helm",
+      "datasourceTemplate": "github-releases"
+    }
   ],
 }
