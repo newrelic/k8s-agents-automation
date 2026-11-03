@@ -99,6 +99,15 @@
       "groupName": "go digest updates",
       "schedule": ["before 6am on the first day of the month"],
     },
+    {
+      // k8s.io staging modules (api, apimachinery, client-go, ...) stay on v0.x forever; their old
+      // v1.x/v11+incompatible tags predate that and resurface as junk major PRs once grouping frees branch slots.
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["k8s.io/**"],
+      "matchCurrentVersion": "/^v?0\\./",
+      // Regex rather than "<1.0.0": semver ranges exclude prereleases, which would block k8s alpha bumps.
+      "allowedVersions": "/^v?0\\./",
+    },
   ],
   "customManagers": [
     {
