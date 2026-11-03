@@ -16,8 +16,8 @@
   "printConfig": true,
   "labels": ["dependencies"],
   // Update source import paths on major module updates, using mod.
-  // Run `go mod tidy` after go.mod updates so PRs don't fail the check-tidy target.
   // Since postUpdateOptions is mergeable, all previous and future values are kept
+  // Run `go mod tidy` after go.mod updates so PRs don't fail the check-tidy target.
   "postUpdateOptions": ["gomodUpdateImportPaths", "gomodTidy"],
   "timezone": "America/Los_Angeles",
   // The rules defined here will be used in all core-int repositories, so they should be valid
@@ -85,11 +85,19 @@
     {
       // Group all non-major Go module bumps into a single weekly PR so merging one
       // doesn't force every other go.mod PR to rebase and re-run the full CI.
-      // The group is only auto-merged if every update in it is (0.x deps keep it a PR).
       "matchManagers": ["gomod"],
-      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchUpdateTypes": ["minor", "patch"],
       "matchPackageNames": ["!go", "!golang"],
       "groupName": "go non-major dependencies",
+      "schedule": ["before 6am on monday"],
+    },
+    {
+      // A group is only auto-merged if every update in it is, so keep 0.x deps (never auto-merged)
+      // in their own weekly PR and let the stable group above keep auto-merging.
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "/^v?0\\./",
+      "groupName": "go 0.x dependencies",
       "schedule": ["before 6am on monday"],
     },
     {
