@@ -97,7 +97,7 @@
       "matchManagers": ["gomod"],
       "matchUpdateTypes": ["digest"],
       "groupName": "go digest updates",
-      "schedule": ["before 6am on the first day of the month"],
+      "schedule": ["on the first day of the month"],
     },
     {
       // k8s.io staging modules (api, apimachinery, client-go, ...) stay on v0.x forever; their old
