@@ -16,8 +16,10 @@
   "printConfig": true,
   "labels": ["dependencies"],
   // Update source import paths on major module updates, using mod.
+  // Run `go mod tidy` after go.mod updates so PRs don't fail the check-tidy target.
   // Since postUpdateOptions is mergeable, all previous and future values are kept
-  "postUpdateOptions": ["gomodUpdateImportPaths"],
+  "postUpdateOptions": ["gomodUpdateImportPaths", "gomodTidy"],
+  "timezone": "America/Los_Angeles",
   // The rules defined here will be used in all core-int repositories, so they should be valid
   // for all of them.
   "packageRules": [
@@ -79,6 +81,23 @@
     {
       "groupName": "Minikube version (batch update)",
       "matchDepNames": ["manusa/actions-setup-minikube", "kubernetes/minikube"],
+    },
+    {
+      // Group all non-major Go module bumps into a single weekly PR so merging one
+      // doesn't force every other go.mod PR to rebase and re-run the full CI.
+      // The group is only auto-merged if every update in it is (0.x deps keep it a PR).
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchPackageNames": ["!go", "!golang"],
+      "groupName": "go non-major dependencies",
+      "schedule": ["before 6am on monday"],
+    },
+    {
+      // Pseudo-version digests (k8s.io/utils, client_golang/exp, ...) churn constantly; bump monthly.
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["digest"],
+      "groupName": "go digest updates",
+      "schedule": ["before 6am on the first day of the month"],
     },
   ],
   "customManagers": [
