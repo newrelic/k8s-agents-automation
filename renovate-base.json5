@@ -17,7 +17,9 @@
   "labels": ["dependencies"],
   // Update source import paths on major module updates, using mod.
   // Since postUpdateOptions is mergeable, all previous and future values are kept
-  "postUpdateOptions": ["gomodUpdateImportPaths"],
+  // Run `go mod tidy` after go.mod updates so PRs don't fail the check-tidy target.
+  "postUpdateOptions": ["gomodUpdateImportPaths", "gomodTidy"],
+  "timezone": "America/Los_Angeles",
   // The rules defined here will be used in all core-int repositories, so they should be valid
   // for all of them.
   "packageRules": [
@@ -79,6 +81,40 @@
     {
       "groupName": "Minikube version (batch update)",
       "matchDepNames": ["manusa/actions-setup-minikube", "kubernetes/minikube"],
+    },
+    {
+      // Group all non-major Go module bumps into a single weekly PR so merging one
+      // doesn't force every other go.mod PR to rebase and re-run the full CI.
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["!go", "!golang"],
+      "groupName": "go non-major dependencies",
+      "schedule": ["before 6am on monday"],
+    },
+    {
+      // A group is only auto-merged if every update in it is, so keep 0.x deps (never auto-merged)
+      // in their own weekly PR and let the stable group above keep auto-merging.
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "/^v?0\\./",
+      "groupName": "go 0.x dependencies",
+      "schedule": ["before 6am on monday"],
+    },
+    {
+      // Pseudo-version digests (k8s.io/utils, client_golang/exp, ...) churn constantly; bump monthly.
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["digest"],
+      "groupName": "go digest updates",
+      "schedule": ["on the first day of the month"],
+    },
+    {
+      // k8s.io staging modules (api, apimachinery, client-go, ...) stay on v0.x forever; their old
+      // v1.x/v11+incompatible tags predate that and resurface as junk major PRs once grouping frees branch slots.
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["k8s.io/**"],
+      "matchCurrentVersion": "/^v?0\\./",
+      // Regex rather than "<1.0.0": semver ranges exclude prereleases, which would block k8s alpha bumps.
+      "allowedVersions": "/^v?0\\./",
     },
   ],
   "customManagers": [
